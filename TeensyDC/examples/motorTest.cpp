@@ -9,10 +9,10 @@ IntervalTimer myTimer;
 Servo kickerServo;
 
 // motor pins
-int leftPWM = 14;
-int leftDIR = 15;
-int rightPWM = 11;
-int rightDIR = 10;
+int leftPWM = 3;
+int leftDIR = 0;
+int rightPWM = 2;
+int rightDIR = 1;
 
 // encoder pins
 int leftEncoderA = 16;
@@ -174,13 +174,13 @@ void motorPID() {
   }
   analogWrite(rightPWM, rightDuty);
   
-  //Serial.print(desiredRightVelocity);
-  //Serial.print(" ");
-  //Serial.print(rightVelocity);
-  //Serial.print(" ");
-  //Serial.print(rightDuty);
-  //Serial.print(" ");
-  //Serial.println(rightDIR);
+  Serial.print(desiredRightVelocity);
+  Serial.print(" ");
+  Serial.print(rightVelocity);
+  Serial.print(" ");
+  Serial.print(rightDuty);
+  Serial.print(" ");
+  Serial.println(rightDIR);
 
 
 

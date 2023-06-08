@@ -10,16 +10,16 @@ IntervalTimer myTimer;
 Servo kickerServo;
 
 // motor pins
-int leftPWM = 14;
-int leftDIR = 15;
-int rightPWM = 11;
-int rightDIR = 10;
+int leftPWM = 3;
+int leftDIR = 0;
+int rightPWM = 2;
+int rightDIR = 1;
 
 // encoder pins
-int leftEncoderA = 16;
-int leftEncoderB = 17;
-int rightEncoderA = 9;
-int rightEncoderB = 8;
+int leftEncoderA = 4;
+int leftEncoderB = 5;
+int rightEncoderA = 6;
+int rightEncoderB = 7;
 
 // swap A and B if turning the motor forwards gives a negative position
 Encoder encoderLeft(leftEncoderA, leftEncoderB);
@@ -30,14 +30,14 @@ long encoderCountRight = 0;
 // variables shared between loop() and motorPID()
 volatile float desiredLeftVelocity = 0;
 volatile float desiredRightVelocity = 0;
-volatile float KP = 0.1; // how hard to try to follow the desired velocity
+volatile float KP = 0.05; // how hard to try to follow the desired velocity
 
 void motorPID();
 
 void motorSetup() {
 
   //attach the servo to pin 9
-  kickerServo.attach(2);
+  kickerServo.attach(22);
   //set the servo to 0 degrees
   kickerServo.write(0);
 
@@ -97,11 +97,10 @@ void motorPID() {
     leftDuty = 255;
   }
   if (leftDuty < 0) {
-    leftDuty = -leftDuty;
-    digitalWrite(leftDIR, LOW);
+    digitalWrite(leftDIR, HIGH);
   }
   else {
-    digitalWrite(leftDIR, HIGH);
+    digitalWrite(leftDIR, LOW);
   }
   analogWrite(leftPWM, leftDuty);
 
@@ -114,24 +113,13 @@ void motorPID() {
     rightDuty = 255;
   }
   if (rightDuty < 0) {
-    rightDuty = -rightDuty;
-    digitalWrite(rightDIR, HIGH);
+    digitalWrite(rightDIR, LOW);
   }
   else {
-    digitalWrite(rightDIR, LOW);
+    digitalWrite(rightDIR, HIGH);
   }
   analogWrite(rightPWM, rightDuty);
   
-  //Serial.print(desiredRightVelocity);
-  //Serial.print(" ");
-  //Serial.print(rightVelocity);
-  //Serial.print(" ");
-  //Serial.print(rightDuty);
-  //Serial.print(" ");
-  //Serial.println(rightDIR);
-
-
-
 }
 
 

@@ -1,61 +1,102 @@
 #include <Arduino.h>
-#include <Servo.h>
-#include <Encoder.h>
-#include <IntervalTimer.h>
 #include "motors.h"
 #include "sensors.h"
+#include "phototransistor.h"
+#include "servo_lib.h"
 
-void kick();
+void line();
+
+#define MAX_SWEEP_ANGLE 180
+#define MIN_SWEEP_ANGLE 0
+
+const int photoPin = A3;  // pin 16
+const int servoPin = 9;
+const int laserPin = 10;
+
+const double angle_target = 90;
+
+static volatile int lineCOunt = 0;
+
+int loopCount = 0;
 
 void setup() {
   Serial.begin(9600);
 
   motorSetup();
-  sensorSetup(3, kick);
+  kickerSevoAngle(0);
+
+  setMotorSpeeds(100, 100);
+  sensorSetup(1, line);
+
+  // Servo setup
+  servo_Startup(servoPin, MIN_SWEEP_ANGLE, MAX_SWEEP_ANGLE, 0.5); // servo that sweeps from 0° to 90° over 3 seconds
+
+  // Phototransistor setup
+  photo_Startup(photoPin, angle_target);
+
+  // Laser setup
+  pinMode(laserPin, OUTPUT);
+  digitalWrite(laserPin, HIGH); // turn laser on
+
+
 
 }
 
 void loop() {
+  delay(10);
   // put your main code here, to run repeatedly:
-  delay(100);
+  static int steerDir = 0;
+  static int shootDir = 0;
 
-  //wait for user to enter a 1 or 0
-  //it 1 move the servo to 90 degrees
-  //if 0 move the servo to 0 degrees
-  //if 2 set motor to 500
-  //if 3 set motor to 0
-  //if 4 set motor to -500
+  static int leftVelocity = 100;
+  static int rightVelocity = 100;
+
+  //read line sensor
+  readPhotoTransistor();
+
+  // update phototransistor
+  photo_Read(servo_GetAngle());
 
 
-  switch (Serial.read())
-  {
-  case '1':
+  if (photo_Steer(&steerDir)){ // photo_Steer() must be called BEFORE photo_FindGoalie()
+      Serial.println(steerDir);
+      leftVelocity = 100 - steerDir * 0;
+      rightVelocity = 100 + steerDir * 0;
+      setMotorSpeeds(leftVelocity, rightVelocity);
+  }
+
+
+  photo_FindGoalie(&shootDir);
+   
+  // Sweep servo
+  // To avoid getting out of sync with our laser system, we reset it every time the servo changes direction.
+  if(servo_Sweep() == 1){ // servo changed directions this loop
+    photo_Reset();
+  }
+
+  if (lineCOunt == 6) { // if we have seen 6 lines keep driving for 0.1s and kick the ball
+    delay(800); // time to go 6in, subtract time to kick, also turn
+    
+    //turn
+    //if (shootDir == 0) { //goalie on left, turn right to shoot for right
+    //  setMotorSpeeds(200, 100);
+    //} else {
+    //  setMotorSpeeds(100, 200);
+    //}
+
+    delay(400);
+
+    //kick
     kickerSevoAngle(180);
-    Serial.println("Servo at 180 degrees");
-    break;
 
-  case '0':
-    kickerSevoAngle(0);
-    Serial.println("Servo at 0 degrees");
-    break;
-  case '2':
-    setMotorSpeeds(500, 500);
-    break;
-
-  case '3': 
     setMotorSpeeds(0, 0);
-    break;
-
-  case '4':
-    setMotorSpeeds(-500, -500);
-    break;
-
+    while(1){} //stop for now
   }
 
 }
 
 
-void kick() {
-  Serial.println("Kick");
-  kickerSevoAngle(180);
+void line() {
+  Serial.println("line");
+  lineCOunt++;
 }

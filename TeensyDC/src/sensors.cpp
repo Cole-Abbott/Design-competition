@@ -3,19 +3,18 @@
 #include <IntervalTimer.h>
 
 
-#define LINE_THRESHOLD 400
+#define LINE_THRESHOLD 600
 
-IntervalTimer sensorTimer;
-void readPhotoTransistor();
+//IntervalTimer sensorTimer;
 
 void (*callback)();
 int callbackLineCount;
 
 void sensorSetup(int lineCount, void (*kick)()) {
-    pinMode(A8, INPUT);
+    pinMode(A6, INPUT);
     callback = kick;
     callbackLineCount = lineCount;
-    sensorTimer.begin(readPhotoTransistor, 10000);
+    //sensorTimer.begin(readPhotoTransistor, 100000);
 
 }
 
@@ -23,7 +22,7 @@ void readPhotoTransistor() {
     static int lineCount = 0;
     static bool onLine = false;
 
-    int phototrasistorVoltage = analogRead(A8);
+    int phototrasistorVoltage = analogRead(A6);
 
     if (phototrasistorVoltage < LINE_THRESHOLD) {
         if (!onLine) {
@@ -35,9 +34,8 @@ void readPhotoTransistor() {
     }
 
     if (lineCount == callbackLineCount) {
-        Serial.println("Line count reached");
-        callback();
         lineCount = 0;
+        callback();
     }
 
 
