@@ -8,7 +8,8 @@ void line();
 
 #define MAX_SWEEP_ANGLE 180
 #define MIN_SWEEP_ANGLE 0
-#define Kp .7
+
+#define Kp .7 // proportional gain for steering
 
 const int photoPin = A3;  // pin 16
 const int servoPin = 9;
@@ -97,7 +98,7 @@ void loop() {
 
 }
 
-
+//callback function for line sensor
 void line() {
   Serial.println("line");
   lineCOunt++;

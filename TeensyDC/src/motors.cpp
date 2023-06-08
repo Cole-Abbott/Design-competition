@@ -123,12 +123,13 @@ void motorPID() {
 }
 
 
-
+// set the desired motor speeds
 void setMotorSpeeds(float leftSpeed, float rightSpeed) {
   desiredLeftVelocity = leftSpeed;
   desiredRightVelocity = rightSpeed;
 }
 
+// set the kicker servo angle
 void kickerSevoAngle(int angle){
     kickerServo.write(angle);
 }
