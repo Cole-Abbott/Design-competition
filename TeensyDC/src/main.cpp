@@ -8,12 +8,13 @@ void line();
 
 #define MAX_SWEEP_ANGLE 180
 #define MIN_SWEEP_ANGLE 0
+#define Kp .7
 
 const int photoPin = A3;  // pin 16
 const int servoPin = 9;
 const int laserPin = 10;
 
-const double angle_target = 90;
+const double angle_target = 115;
 
 static volatile int lineCOunt = 0;
 
@@ -60,8 +61,8 @@ void loop() {
 
   if (photo_Steer(&steerDir)){ // photo_Steer() must be called BEFORE photo_FindGoalie()
       Serial.println(steerDir);
-      leftVelocity = 100 - steerDir * 0;
-      rightVelocity = 100 + steerDir * 0;
+      leftVelocity = 100 - steerDir * Kp;
+      rightVelocity = 100 + steerDir * Kp;
       setMotorSpeeds(leftVelocity, rightVelocity);
   }
 
@@ -75,14 +76,15 @@ void loop() {
   }
 
   if (lineCOunt == 6) { // if we have seen 6 lines keep driving for 0.1s and kick the ball
-    delay(800); // time to go 6in, subtract time to kick, also turn
+    setMotorSpeeds(100, 100);
+    delay(1200); // time to go 6in, subtract time to kick, also turn
     
     //turn
-    //if (shootDir == 0) { //goalie on left, turn right to shoot for right
-    //  setMotorSpeeds(200, 100);
-    //} else {
-    //  setMotorSpeeds(100, 200);
-    //}
+    if (shootDir == 0) { //goalie on left, turn right to shoot for right
+      setMotorSpeeds(200, 100);
+    } else {
+      setMotorSpeeds(100, 200);
+    }
 
     delay(400);
 

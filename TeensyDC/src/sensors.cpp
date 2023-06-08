@@ -3,7 +3,7 @@
 #include <IntervalTimer.h>
 
 
-#define LINE_THRESHOLD 600
+#define LINE_THRESHOLD 400
 
 //IntervalTimer sensorTimer;
 
