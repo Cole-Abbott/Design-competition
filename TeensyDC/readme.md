@@ -20,4 +20,4 @@ All code can be found on GitHub at
 https://github.com/Cole-Abbott/Design-competition/tree/main/TeensyDC 
 
 
-![Image of Robot]()
+![Image of Robot](https://raw.githubusercontent.com/Cole-Abbott/Design-competition/main/TeensyDC/IMG_2267.jpeg)
