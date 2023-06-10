@@ -18,3 +18,6 @@ The robot was controlled by a Teensy 4.0 and powered by a 12v battery with a 5v 
 
 All code can be found on GitHub at
 https://github.com/Cole-Abbott/Design-competition/tree/main/TeensyDC 
+
+
+![Image of Robot]()
