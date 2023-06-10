@@ -15,3 +15,6 @@ Once the robot was close enough to the ball, it would kick the ball with a sprin
 Right before the kick, the robot would turn a little bit to aim around the goalie depending on where the goalie was detected. by the laser.
 
 The robot was controlled by a Teensy 4.0 and powered by a 12v battery with a 5v regulator. It was made of laser cut acrylic and 3d printed parts.
+
+All code can be found on GitHub at
+https://github.com/Cole-Abbott/Design-competition/tree/main/TeensyDC 
